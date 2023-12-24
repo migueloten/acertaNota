@@ -1,0 +1,44 @@
+body{
+    background-color: var(--color-base);
+    margin: 0;
+    padding: 0;
+}
+
+.color-base{
+    color: var(--color-base);
+}
+.color-one{
+    color: var(--color-one);
+}
+.color-two{
+    color: var(--color-two);
+}
+.color-three{
+    color: var(--color-three);
+}
+.wrong-answer{
+    color: var(--wrong-answer);
+}
+.bg-color-base{
+    background-color: var(--color-base);
+}
+.bg-color-one{
+    background-color: var(--color-one);
+}
+.bg-color-two{
+    background-color: var(--color-two);
+}
+.bg-color-three{
+    background-color: var(--color-three);
+}
+.bg-wrong-answer{
+    background-color: var(--wrong-answer);
+}
+
+:root {
+    --color-base: #E2E6F2;
+    --color-one: #5650A5;
+    --color-two: #6C63D4;
+    --color-three: #130C5A;
+    --wrong-answer: #9F9DB0;
+}
