@@ -12,36 +12,49 @@
             </p>
             <form class="flex flex-col gap-8">
                 <fieldset class="flex flex-col gap-5">
-                    <legend class="legend-form">Notas</legend>
+                    <p class="legend-form">Notas</p>
                     <div class="flex gap-5">
                         <div class="checkbox" v-for="(item, index) in items" v-bind:key="item.id">
                             <label class="label-check-notas" :for="item.id">
-                                <input class="input-check-notas" type="checkbox" :id="item.id" :name="item.id"
-                                    :value="index">
+                                <input class="input-check-notas" data-js="input-check-notas" type="checkbox" :id="item.id"
+                                    :name="item.id" :value="index">
                                 <span class="decorator-check-notas">{{ item.label }}</span>
                             </label>
                         </div>
                     </div>
                 </fieldset>
-                <div class="flex gap-4">
-                    <!-- <label for="questions" class="legend-form">Questões</label>
-                    <input id="questions" type="number" step="1" max="50" min="1" value="1"> -->
-                    <div class="number-input">
-                        <input class="quantity" min="0" name="quantity" value="1" type="number">
-                        <div class="flex flex-col">
-                            <button type="button"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()"></button>
-                            <button type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                class="plus"></button>
+
+                <div class="flex flex-col gap-4">
+                    <label for="questions" class="legend-form">Questões</label>
+                    <div class="flex gap-2 items-center">
+                        <input id="questions" class="rounded-2xl bg-color-three color-base px-8 py-4 text-xl" min="1"
+                            max="50" step="1" name="questionsQuantity" value="1" type="number">
+                        <div class="flex flex-col text-4xl gap-2">
+                            <button type="button" class="color-base flex items-center" v-on:click="addQuestion()">
+                                <Icon name="ic:round-arrow-upward" />
+                            </button>
+                            <button type="button" class="color-base flex items-center" v-on:click="removeQuestion()">
+                                <Icon name="ic:round-arrow-downward" />
+                            </button>
                         </div>
                     </div>
                 </div>
-                <button type="submit" value="Submit">Submit</button>
-            </form>
 
-            <NuxtLink to="/questions" class="bg-color-three color-base p-2 text-4xl flex items-center gap-2 rounded-md">
-                <Icon name="material-symbols:arrow-right-alt-rounded" /> Questões
-            </NuxtLink>
+                <label class="switch flex items-center gap-3">
+                    <input name="seguirAutomaticamente" type="checkbox" id="seguirAutomaticamente">
+                    <span class="slider"></span>
+                    <span class="legend-form">Seguir automaticamente após acertar</span>
+                </label>
+
+                <label class="switch flex items-center gap-3">
+                    <input name="notaReferencia" type="checkbox" id="notaReferencia">
+                    <span class="slider"></span>
+                    <span class="legend-form">Ativar nota de referência</span>
+                </label>
+
+                <button type="button" v-on:click="setStorage()"
+                    class="px-8 py-4 bg-color-three color-base rounded-lg text-2xl w-48">Iniciar</button>
+            </form>
         </div>
         <div class="flex w-[13.3vw]">
             <Column class="bg-color-two w-1/2" />
@@ -51,6 +64,9 @@
 </template>
 
 <script setup>
+
+const router = useRouter()
+
 const items = ref([
     { id: 'c', label: 'C' },
     { id: 'd', label: 'D' },
@@ -59,6 +75,50 @@ const items = ref([
     { id: 'g', label: 'G' },
     { id: 'a', label: 'A' },
     { id: 'b', label: 'B' }])
+
+const addQuestion = () => {
+    document.querySelector('input[name=questionsQuantity]').stepUp()
+}
+
+const removeQuestion = () => {
+    document.querySelector('input[name=questionsQuantity]').stepDown()
+}
+
+const setStorage = () => {
+
+    let checklistArray = []
+    document.querySelectorAll('[data-js="input-check-notas"]').forEach(check => {
+        check.checked ? checklistArray.push(check.id) : ''
+    });
+    let questionQuantity = document.querySelector('#questions').value;
+    let seguirAutomaticamente = document.querySelector('#seguirAutomaticamente').checked;
+    let notaReferencia = document.querySelector('#notaReferencia').checked;
+
+    localStorage.setItem('notas', JSON.stringify(checklistArray));
+    localStorage.setItem('nNotas', checklistArray.length)
+    localStorage.setItem('quantidadeQuestoes', questionQuantity);
+    localStorage.setItem('seguirQuestoes', seguirAutomaticamente);
+    localStorage.setItem('referencia', notaReferencia);
+    localStorage.setItem('resultado', '0')
+    localStorage.setItem('progresso', '0')
+
+    // console.log('Notas: ' + localStorage.getItem('notas'))
+    // console.log('Quantidade de questões: ' + localStorage.getItem('quantidadeQuestoes'))
+    // console.log('Seguir Automaticamente: ' + localStorage.getItem('seguirQuestoes'))
+    // console.log('Nota de referência: ' + localStorage.getItem('referencia'))
+
+    router.push('/questions')
+};
+
+onMounted(() => {
+    JSON.parse(localStorage.getItem('notas')).forEach(nota => {
+        document.querySelector('#' + nota).checked = true
+    })
+    document.querySelector('#questions').value = localStorage.getItem('quantidadeQuestoes');
+    document.querySelector('#seguirAutomaticamente').checked = localStorage.getItem('seguirQuestoes') == 'true' ? true : false;
+    document.querySelector('#notaReferencia').checked = localStorage.getItem('referencia') == 'true' ? true : false;
+})
+
 </script>
 
 <style lang="scss">
@@ -68,77 +128,55 @@ const items = ref([
     color: var(--color-base);
 }
 
-input[type="number"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
+/* ---------------------------------------- estilo para os switchs ------------------------------------------------------------------------------ */
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-
-.number-input {
-    border: 2px solid #ddd;
-    display: inline-flex;
-}
-
-.number-input,
-.number-input * {
-    box-sizing: border-box;
-}
-
-.number-input button {
-    outline: none;
-    -webkit-appearance: none;
-    background-color: transparent;
-    border: none;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    cursor: pointer;
-    margin: 0;
-    position: relative;
-}
-
-.number-input button:before,
-.number-input button:after {
+.slider {
     display: inline-block;
+    width: 3.5em;
+    height: 2em;
+    background-color: var(--color-base);
+    border-radius: 1em;
+    position: relative;
+    transition: 0.3s all ease-in-out;
+}
+
+.slider::after {
+    content: "";
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: #fff;
+    border-radius: calc(1.5em / 2);
     position: absolute;
-    content: '';
-    width: 1rem;
-    height: 2px;
-    background-color: #212121;
-    transform: translate(-50%, -50%);
+    top: 0.25em;
+    transform: translateX(0.25em);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.1);
+    transition: 0.3s all ease-in-out;
 }
 
-.number-input button.plus:after {
-    transform: translate(-50%, -50%) rotate(90deg);
+.switch input[type="checkbox"]:checked+.slider {
+    background-color: var(--color-three);
 }
 
-.number-input input[type=number] {
-    font-family: sans-serif;
-    max-width: 5rem;
-    padding: .5rem;
-    border: solid #ddd;
-    border-width: 0 2px;
-    font-size: 2rem;
-    height: 3rem;
-    font-weight: bold;
-    text-align: center;
+.switch input[type="checkbox"]:checked+.slider::after {
+    transform: translateX(1.75em);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
 }
 
-/* input:invalid + span::after {
-  content: "✖";
-  padding-left: 5px;
+.switch input[type="checkbox"] {
+    display: none;
 }
 
-input:valid + span::after {
-  content: "✓";
-  padding-left: 5px;
-} */
+.switch input[type="checkbox"]:active+.slider::after {
+    width: 3em;
+}
+
+.switch input[type="checkbox"]:checked:active+.slider::after {
+    transform: translateX(calc(3.5em - 3em - 0.25em));
+}
+
+
+/* ---------------------------------------- estilo para a o checklist de notas ------------------------------------------------------------------ */
 
 .label-check-notas {
     color: var(--color-base);
@@ -175,4 +213,27 @@ input:valid + span::after {
     position: relative;
     font-size: 40px;
 }
+
+/* ------------------------------------------ estilo para o input número para as questões ------------------------------------------------------ */
+
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* input:invalid + span::after {
+  content: "✖";
+  padding-left: 5px;
+}
+
+input:valid + span::after {
+  content: "✓";
+  padding-left: 5px;
+} */
 </style>
