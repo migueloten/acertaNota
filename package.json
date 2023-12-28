@@ -18,5 +18,8 @@
     "sass-loader": "^13.3.2",
     "vue": "^3.3.12",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "tone": "^14.7.77"
   }
 }

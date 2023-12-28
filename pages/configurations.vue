@@ -1,9 +1,6 @@
 <template>
     <div class="flex bg-color-one">
-        <div class="flex w-[6.6vw]">
-            <Column class="bg-color-base w-full" />
-        </div>
-        <div class="flex flex-col h-screen items-center justify-around w-[80vw]">
+        <div class="flex flex-col h-screen items-center justify-around w-full">
             <NuxtLink to="/" class="bg-color-three color-base p-2 text-4xl flex items-center gap-2 rounded-md">
                 <Icon name="material-symbols:arrow-left-alt-rounded" />
             </NuxtLink>
@@ -16,8 +13,8 @@
                     <div class="flex gap-5">
                         <div class="checkbox" v-for="(item, index) in items" v-bind:key="item.id">
                             <label class="label-check-notas" :for="item.id">
-                                <input class="input-check-notas" data-js="input-check-notas" type="checkbox" :id="item.id"
-                                    :name="item.id" :value="index">
+                                <input class="input-check-notas" v-on:click="playNote(item.id)" data-js="input-check-notas"
+                                    type="checkbox" :id="item.id" :name="item.id" :value="index">
                                 <span class="decorator-check-notas">{{ item.label }}</span>
                             </label>
                         </div>
@@ -56,10 +53,6 @@
                     class="px-8 py-4 bg-color-three color-base rounded-lg text-2xl w-48">Iniciar</button>
             </form>
         </div>
-        <div class="flex w-[13.3vw]">
-            <Column class="bg-color-two w-1/2" />
-            <Column class="bg-color-three w-1/2" />
-        </div>
     </div>
 </template>
 
@@ -85,7 +78,6 @@ const removeQuestion = () => {
 }
 
 const setStorage = () => {
-
     let checklistArray = []
     document.querySelectorAll('[data-js="input-check-notas"]').forEach(check => {
         check.checked ? checklistArray.push(check.id) : ''
@@ -99,16 +91,20 @@ const setStorage = () => {
     localStorage.setItem('quantidadeQuestoes', questionQuantity);
     localStorage.setItem('seguirQuestoes', seguirAutomaticamente);
     localStorage.setItem('referencia', notaReferencia);
-    localStorage.setItem('resultado', '0')
-    localStorage.setItem('progresso', '0')
-
-    // console.log('Notas: ' + localStorage.getItem('notas'))
-    // console.log('Quantidade de questões: ' + localStorage.getItem('quantidadeQuestoes'))
-    // console.log('Seguir Automaticamente: ' + localStorage.getItem('seguirQuestoes'))
-    // console.log('Nota de referência: ' + localStorage.getItem('referencia'))
+    localStorage.setItem('resultadoFinal', '0');
+    localStorage.setItem('progresso', '1');
+    localStorage.setItem('tentativas', '0');
 
     router.push('/questions')
 };
+
+// ---------- Toca a nota -----------------------------------------------------------
+import * as Tone from 'tone'
+let synth
+const playNote = (nota) => {
+    synth = new Tone.Synth().toDestination();
+    synth.triggerAttackRelease(nota + "4", "8n");
+}
 
 onMounted(() => {
     JSON.parse(localStorage.getItem('notas')).forEach(nota => {
