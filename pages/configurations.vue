@@ -1,11 +1,11 @@
 <template>
-    <div class="flex bg-color-base">
-        <div class="flex flex-col h-screen items-center justify-around w-full">
+    <div class="flex bg-color-base overflow-y-auto">
+        <div class="flex flex-col h-screen items-center gap-12 w-full p-5 md:px-0">
             <NuxtLink to="/"
-                class="bg-color-primary color-base p-2 text-4xl flex items-center gap-2 fixed left-[5vw] top-[5vh] rounded-md">
+                class="bg-color-primary color-base p-2 text-4xl flex items-center gap-2 fixed left-[4vw] top-[2vh] rounded-md z-10">
                 <Icon name="material-symbols:arrow-left-alt-rounded" />
             </NuxtLink>
-            <p class="text-7xl items-center color-primary font-semibold flex">
+            <p class="text-5xl md:text-7xl mt-16 items-center color-primary font-semibold flex">
                 Configurações
             </p>
             <form class="flex flex-col gap-8">
@@ -197,6 +197,10 @@ onMounted(() => {
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
     transition: 0.6s ease;
     cursor: pointer;
+}
+
+.slider {
+    min-width: 3.5rem;
 }
 
 /* ------------------------------------------ estilo para o input número para as questões ------------------------------------------------------ */

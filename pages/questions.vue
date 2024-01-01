@@ -1,30 +1,30 @@
 <template>
-    <div class="flex bg-color-base">
+    <div class="flex bg-color-base overflow-y-auto">
         <div class="flex justify-center items-center absolute w-[100vw] h-[100vh] bg-color-base opacity-0.5" id="cortina">
             <p
                 class="flex justify-center items-center font-bold bg-color-base-alt color-primary text-6xl w-40 h-40 rounded-full loading-note">
                 <Icon name="material-symbols:music-note" />
             </p>
         </div>
-        <div class="flex flex-col h-screen items-center justify-around w-full">
+        <div class="flex flex-col h-screen items-center justify-around w-full p-5">
             <button type="button"
-                class="bg-color-primary color-base p-2 text-4xl flex items-center gap-2 fixed left-[5vw] top-[5vh] rounded-md"
+                class="bg-color-primary color-base p-2 text-4xl flex items-center gap-2 fixed left-[5vw] top-[5vh] rounded-md z-10"
                 v-on:click="voltarConfiguracoes()">
                 <Icon name="mynaui:config" />
             </button>
-            <p class="text-7xl items-center color-primary font-semibold flex">
+            <p class="text-5xl md:text-7xl mt-16 items-center color-primary font-semibold flex text-wrap">
                 Questão {{ progressoTotal }} de {{ quantidadeQuestoes }}
             </p>
             <div class="flex flex-col gap-2">
-                <button class="p-5 bg-color-primary color-base rounded-lg text-3xl" v-if="notaReferencia"
+                <button class="bg-color-primary color-base rounded-lg md:text-3xl text-2xl md:p-5 p-3" v-if="notaReferencia"
                     v-on:click="playReferencia()" type="button">Nota de referência</button>
-                <button class="p-5 bg-color-primary color-base rounded-lg text-3xl" v-on:click="playNote(randomOctave)"
-                    type="button">Ouvir a questão</button>
+                <button class="bg-color-primary color-base rounded-lg md:text-3xl text-2xl md:p-5 p-3"
+                    v-on:click="playNote(randomOctave)" type="button">Ouvir a questão</button>
             </div>
 
             <div class="flex flex-col gap-10 items-center">
                 <p class="text-4xl color-primary">Alternativas</p>
-                <div class="flex gap-6">
+                <div class="flex gap-6 flex-wrap">
                     <button type="button" :class="[`bg-color-${item}`]"
                         class="w-[75px] h-[75px] color-base rounded-lg text-xl" data-js="alternative-button"
                         v-on:click="revisao(item)" :id="item" v-for="(item, index) in items" v-bind:key="item">
@@ -33,13 +33,13 @@
                 </div>
             </div>
 
-            <div class="flex bg-color-base-alt w-[60vw] h-3 rounded-full">
+            <div class="flex bg-color-base-alt w-[60vw] h-3 mb-8 md:mb-2 rounded-full">
                 <div class="bg-color-primary h-full rounded-full" data-js="progress-bar">
                 </div>
             </div>
 
             <button type="button" v-on:click="proximaQuestao()" id="btnProximaQuestao"
-                class="bg-color-primary color-base p-4 text-2xl flex items-center gap-2 fixed right-[2vw] bottom-[-15vh] rounded-md">
+                class="bg-color-primary color-base flex items-center gap-2 fixed right-[2vw] bottom-[-15vh] rounded-md md:text-2xl text-1xl md:p-4 p-2">
                 Próxima questão
             </button>
 
@@ -169,7 +169,7 @@ onMounted(() => {
     transition: all 0.6s ease-in-out;
 
     &.active-next {
-        bottom: 5vh;
+        bottom: 3vh;
     }
 }
 

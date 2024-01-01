@@ -1,9 +1,9 @@
 <template>
     <div class="flex">
         <div class="flex flex-col h-screen items-center justify-center gap-40 w-full">
-            <p class="text-8xl color-primary flex">AcertaNota</p>
+            <p class="text-6xl md:text-8xl color-primary flex">AcertaNota</p>
             <button v-on:click="redirectConfig()"
-                class="bg-color-primary color-base px-16 py-8 text-5xl flex items-center rounded-xl">
+                class="bg-color-primary color-base md:px-16 px-10 md:py-8 py-5 text-3xl md:text-5xl flex items-center rounded-xl">
                 Começar o teste
             </button>
         </div>
