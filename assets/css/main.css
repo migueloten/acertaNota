@@ -4,41 +4,95 @@ body{
     padding: 0;
 }
 
+/* ---------------------------Color--------------------------- */
 .color-base{
     color: var(--color-base);
 }
-.color-one{
-    color: var(--color-one);
+.color-base-alt{
+    color: var(--color-base-alt);
 }
-.color-two{
-    color: var(--color-two);
+.color-primary{
+    color: var(--color-primary);
 }
-.color-three{
-    color: var(--color-three);
+.color-c{
+    color: var(--color-c);
+}
+.color-d{
+    color: var(--color-d);
+}
+.color-e{
+    color: var(--color-e);
+}
+.color-f{
+    color: var(--color-f);
+}
+.color-g{
+    color: var(--color-g);
+}
+.color-a{
+    color: var(--color-a);
+}
+.color-b{
+    color: var(--color-b);
+}
+.right-answer{
+    color: var(--right-answer);
 }
 .wrong-answer{
     color: var(--wrong-answer);
 }
+
+/* ---------------------------bg-color--------------------------- */
 .bg-color-base{
     background-color: var(--color-base);
 }
-.bg-color-one{
-    background-color: var(--color-one);
+.bg-color-base-alt{
+    background-color: var(--color-base-alt);
 }
-.bg-color-two{
-    background-color: var(--color-two);
+.bg-color-primary{
+    background-color: var(--color-primary);
 }
-.bg-color-three{
-    background-color: var(--color-three);
+.bg-color-c{
+    background-color: var(--color-c);
+}
+.bg-color-d{
+    background-color: var(--color-d);
+}
+.bg-color-e{
+    background-color: var(--color-e);
+}
+.bg-color-f{
+    background-color: var(--color-f);
+}
+.bg-color-g{
+    background-color: var(--color-g);
+}
+.bg-color-a{
+    background-color: var(--color-a);
+}
+.bg-color-b{
+    background-color: var(--color-b);
+}
+.bg-right-answer{
+    background-color: var(--right-answer);
 }
 .bg-wrong-answer{
     background-color: var(--wrong-answer);
 }
 
+/* ---------------------------def. de variaveis--------------------------- */
+
 :root {
-    --color-base: #E2E6F2;
-    --color-one: #5650A5;
-    --color-two: #6C63D4;
-    --color-three: #130C5A;
-    --wrong-answer: #9F9DB0;
+    --color-base: #F6F1E8;
+    --color-base-alt: #E7E6DE;
+    --color-primary: #350901;
+    --color-c: #BB4C36;
+    --color-d: #D57543;
+    --color-e: #BFA843;
+    --color-f: #6CAD5B;
+    --color-g: #4BADB4;
+    --color-a: #375792;
+    --color-b: #76578F;
+    --right-answer: #479762;
+    --wrong-answer: #802f2f;
 }

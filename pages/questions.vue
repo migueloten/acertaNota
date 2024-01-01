@@ -1,36 +1,48 @@
 <template>
-    <div class="flex bg-color-two">
-        <div class="flex justify-center items-center absolute w-[100vw] h-[100vh] bg-color-two opacity-0.5" id="cortina">
+    <div class="flex bg-color-base">
+        <div class="flex justify-center items-center absolute w-[100vw] h-[100vh] bg-color-base opacity-0.5" id="cortina">
             <p
-                class="flex justify-center items-center font-bold bg-color-base color-three text-6xl w-40 h-40 rounded-full loading-note">
+                class="flex justify-center items-center font-bold bg-color-base-alt color-primary text-6xl w-40 h-40 rounded-full loading-note">
                 <Icon name="material-symbols:music-note" />
             </p>
         </div>
         <div class="flex flex-col h-screen items-center justify-around w-full">
-            <button type="button" class="p-5 bg-color-three color-base rounded-lg text-xl"
-                v-on:click="voltarConfiguracoes()">Voltar para configurações</button>
-            <p class="text-4xl items-center color-base font-semibold flex gap-3">
-                <Icon name="material-symbols-light:menu-book" />Questão {{ progressoTotal }} de {{ quantidadeQuestoes }}
+            <button type="button"
+                class="bg-color-primary color-base p-2 text-4xl flex items-center gap-2 fixed left-[5vw] top-[5vh] rounded-md"
+                v-on:click="voltarConfiguracoes()">
+                <Icon name="mynaui:config" />
+            </button>
+            <p class="text-7xl items-center color-primary font-semibold flex">
+                Questão {{ progressoTotal }} de {{ quantidadeQuestoes }}
             </p>
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-col gap-2">
-                    <button class="p-5 bg-color-three color-base rounded-lg text-xl" v-if="notaReferencia"
-                        v-on:click="playReferencia()" type="button">Nota de referência</button>
-                    <button class="p-5 bg-color-three color-base rounded-lg text-xl" v-on:click="playNote(randomOctave)"
-                        type="button">Ouvir a questão</button>
-                </div>
-                <div class="flex gap-4">
-                    <button type="button" class="w-16 h-16 bg-color-three color-base rounded-lg text-xl uppercase"
-                        data-js="alternative-button" v-on:click="revisao(item)" :id="item" v-for="(item) in items"
-                        v-bind:key="item">
-                        {{ item }}
+            <div class="flex flex-col gap-2">
+                <button class="p-5 bg-color-primary color-base rounded-lg text-3xl" v-if="notaReferencia"
+                    v-on:click="playReferencia()" type="button">Nota de referência</button>
+                <button class="p-5 bg-color-primary color-base rounded-lg text-3xl" v-on:click="playNote(randomOctave)"
+                    type="button">Ouvir a questão</button>
+            </div>
+
+            <div class="flex flex-col gap-10 items-center">
+                <p class="text-4xl color-primary">Alternativas</p>
+                <div class="flex gap-6">
+                    <button type="button" :class="[`bg-color-${item}`]"
+                        class="w-[75px] h-[75px] color-base rounded-lg text-xl" data-js="alternative-button"
+                        v-on:click="revisao(item)" :id="item" v-for="(item, index) in items" v-bind:key="item">
+                        {{ itemsName[index] }}
                     </button>
                 </div>
-                <button type="button" v-on:click="proximaQuestao()" id="btnProximaQuestao"
-                    class="hidden p-5 bg-color-three color-base rounded-lg text-xl">
-                    Próxima questão
-                </button>
             </div>
+
+            <div class="flex bg-color-base-alt w-[60vw] h-3 rounded-full">
+                <div class="bg-color-primary h-full rounded-full" data-js="progress-bar">
+                </div>
+            </div>
+
+            <button type="button" v-on:click="proximaQuestao()" id="btnProximaQuestao"
+                class="bg-color-primary color-base p-4 text-2xl flex items-center gap-2 fixed right-[2vw] bottom-[-15vh] rounded-md">
+                Próxima questão
+            </button>
+
         </div>
     </div>
 </template>
@@ -39,12 +51,14 @@
 const router = useRouter()
 
 let items = []
+let itemsName = []
 let progressoTotal
 let quantidadeQuestoes
 let seguirAutomaticamente
 let notaReferencia
 if (process.browser) {
     items = ref(JSON.parse(localStorage.getItem('notas')));
+    itemsName = ref(JSON.parse(localStorage.getItem('notasNomes')));
     progressoTotal = parseInt(localStorage.getItem('progresso'));
     quantidadeQuestoes = parseInt(localStorage.getItem('quantidadeQuestoes'));
     seguirAutomaticamente = localStorage.getItem('seguirQuestoes') == 'true' ? true : false;
@@ -102,16 +116,20 @@ const proximaQuestao = () => {
     progressoTotal++
     localStorage.setItem('progresso', progressoTotal)
 
-    progressoTotal <= quantidadeQuestoes ? setTimeout(passaPagina, seguirAutomaticamente ? 1500 : 0) : router.push("/results")
+    progressoTotal <= quantidadeQuestoes ? setTimeout(passaQuestao, seguirAutomaticamente ? 1500 : 0) : setTimeout(passaPagina, seguirAutomaticamente ? 1500 : 0)
+}
+
+const passaQuestao = () => {
+    location.reload(true);
 }
 
 const passaPagina = () => {
-    location.reload(true);
+    router.push("/results");
 }
 
 const showButtonNext = () => {
     progressoTotal == quantidadeQuestoes ? document.querySelector('#btnProximaQuestao').innerHTML = 'Ver resultado final' : ''
-    document.querySelector('#btnProximaQuestao').style.display = 'flex'
+    document.querySelector('#btnProximaQuestao').classList.toggle('active-next')
 }
 
 // ----------- Verificação da resposta --------------------------------------------
@@ -125,6 +143,8 @@ const correto = (id) => {
         btn.classList.contains('correto') ? '' : btn.disabled = true
     })
 
+    document.querySelector('[data-js="progress-bar"]').style.width = ((progressoTotal / quantidadeQuestoes) * 100) + '%'
+
     seguirAutomaticamente ? proximaQuestao() : showButtonNext()
 }
 
@@ -136,6 +156,7 @@ const errado = (id) => {
 
 onMounted(() => {
     randomNoteGenerator()
+    document.querySelector('[data-js="progress-bar"]').style.width = (((progressoTotal - 1) / quantidadeQuestoes) * 100) + '%'
 })
 </script>
 
@@ -144,20 +165,35 @@ onMounted(() => {
     animation: abrirCortina 2s forwards;
 }
 
+#btnProximaQuestao {
+    transition: all 0.6s ease-in-out;
+
+    &.active-next {
+        bottom: 5vh;
+    }
+}
+
+button[data-js="alternative-button"] {
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
 .correto {
-    color: #fff;
-    background-color: #479762;
     animation: jump-shaking 0.83s forwards;
 }
 
 .errado {
-    color: #000;
-    background-color: #802f2f;
+    color: var(--color-primary);
+    background-color: var(--color-base-alt);
     animation: horizontal-shaking 0.3s forwards;
 }
 
 .loading-note {
     animation: rotate-loading 1s infinite;
+}
+
+[data-js="progress-bar"] {
+    width: 0%;
+    transition: all 1s ease;
 }
 
 @keyframes abrirCortina {
