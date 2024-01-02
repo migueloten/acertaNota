@@ -162,7 +162,7 @@ onMounted(() => {
 
 <style lang="scss">
 #cortina {
-    animation: abrirCortina 2s forwards;
+    animation: abrirCortina 1.6s forwards;
 }
 
 #btnProximaQuestao {
@@ -199,16 +199,21 @@ button[data-js="alternative-button"] {
 @keyframes abrirCortina {
     0% {
         opacity: 1;
-        display: flex;
     }
 
     90% {
         opacity: 1;
     }
 
+    99% {
+        width: 100vw;
+        height: 100vh;
+    }
+
     100% {
         opacity: 0;
-        display: none;
+        width: 0px;
+        height: 0px;
     }
 }
 
